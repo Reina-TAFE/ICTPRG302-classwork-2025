@@ -3,6 +3,7 @@ import PySimpleGUI as sg
 from texttable import Texttable
 
 user_table = Texttable()
+MESSAGE = "the quick brown fox jumps over the lazy dog"
 
 def shuffle_letters(unshuffled):
     shuffled = unshuffled
@@ -27,16 +28,40 @@ def make_table(user_dict):
     keys = [letter for letter in list(user_dict.keys())]
     keys.sort()
     values = [user_dict[key] for key in keys]
-    user_table.reset()
-    user_table.add_rows([keys[1:14], values[1:14]], False)
-    user_table.add_row(([" "] * 13))
-    user_table.add_rows([keys[14:27], values[14:27]], False)
-    print(user_table)
-    print(type(user_table))
-    return
+    keys_layout = []
+    values_layout = []
+    for i in keys:
+        keys_layout.append(sg.Text(i))
+        keys_layout.append(sg.VerticalSeparator(color='red'))
+    for j in values:
+        values_layout.append(sg.Text(j))
+        values_layout.append(sg.VerticalSeparator(color="red"))
+    table_layout = [keys_layout, values_layout]
+    return table_layout
+
+def get_window_layout(cipher_table, message):
+    window_layout = [   sg.VPush(),
+                        # [sg.Push(), cipher_table[0],sg.Push()],
+                        sg.HorizontalSeparator(),
+                        # [sg.Push(), cipher_table[1], sg.Push()],
+                        [sg.Push(),sg.Text(message),sg.Push()],
+                        [sg.Input(key='-IN-')],
+                        [sg.Button("Submit")],
+                        sg.VPush()]
+    key_layout = cipher_table[0]
+    value_layout = cipher_table[1]
+    key_layout.insert(0, sg.Push())
+    key_layout.append(sg.Push())
+    value_layout.insert(0, sg.Push())
+    value_layout.append(sg.Push())
+    window_layout.insert(1, key_layout)
+    window_layout.insert(3, value_layout)
+    return window_layout
 
 def play():
     cipher_dict = get_encrypted_alphabet()
-    make_table(cipher_dict)
-
+    table = make_table(cipher_dict)
+    layout = get_window_layout(table, MESSAGE)
+    window = sg.Window("PySimpleGUI Test", layout, resizable=True)
+    window.read(close=True)
 play()
