@@ -47,9 +47,9 @@ def print_table(user_dict):
     user_table.add_rows([keys[1:14], values[1:14]], False)
     user_table.add_row(([" "] * 13))
     user_table.add_rows([keys[14:27], values[14:27]], False)
-    print(user_table.draw())
-    print()
-    return
+    # print(user_table.draw())
+    # print()
+    return user_table
 
 def encrypt_message(origin_message, cipher_key):
     encrypted_message = ''
