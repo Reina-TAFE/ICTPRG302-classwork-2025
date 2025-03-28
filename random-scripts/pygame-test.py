@@ -10,6 +10,7 @@ pygame.init()
 SCREEN_WIDTH = 950
 SCREEN_HEIGHT = 400
 FONT = pygame.font.SysFont('Arial', size=24)
+CIPHER_FONT = pygame.font.SysFont('Arial', size=18)
 
 alphabet = substitution.get_encrypted_alphabet()
 message = substitution.get_random_message()
@@ -47,9 +48,35 @@ def draw_table(table_data):
 
 
 # screen = pygame.display.set_mode([600, 600])
-def draw_cipher_text(cipher_text):
-    draw_message = FONT.render(cipher_text, True, (0,0,0))
-    screen.blit(draw_message, (SCREEN_WIDTH // 2, 120))
+def draw_cipher_text(text):
+    cipher_text = text.split("\n")
+    cipher_text_lines = len(cipher_text)
+    for i in range(cipher_text_lines):
+        draw_message = CIPHER_FONT.render(cipher_text[i], True, (0,0,0))
+        screen.blit(draw_message, ((SCREEN_WIDTH / 2)-(len(cipher_text[i]) * 4 - 1),(30 * (i - 1) + 120)))
+    return
+
+def get_guess():
+    input_string = ""
+    check_for_guess = True
+    while check_for_guess:
+        for guess_event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                check_for_guess = False
+            if guess_event.type == pygame.KEYDOWN:
+                if guess_event.key == pygame.K_RETURN:
+                    try:
+                        a, b = input_string.split("=")
+                        return a.strip(), b.strip()
+                    except ValueError:
+                        print("Invalid input format. Please use 'a=b'.")
+                        input_string = ""
+                        continue
+                elif guess_event.key == pygame.K_BACKSPACE:
+                    input_string = input_string[:-1]
+                else:
+                    input_string += guess_event.unicode
+    return input_string
 
 
 draw_table(alphabet)

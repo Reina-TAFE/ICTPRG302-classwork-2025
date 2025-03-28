@@ -1,12 +1,12 @@
 import random
 import re
-from texttable import Texttable
+# from texttable import Texttable
 
 MESSAGE_BANK = open('sentences.txt')
 MESSAGE_LIST = (MESSAGE_BANK.read()).split("*****")
 MESSAGE_BANK.close()
 # MESSAGE = "the quick brown fox jumps over the lazy dog"
-user_table = Texttable()
+# user_table = Texttable()
 
 def get_random_message():
     message_full = random.choice(MESSAGE_LIST)
@@ -43,13 +43,13 @@ def print_table(user_dict):
     keys = [letter for letter in list(user_dict.keys())]
     keys.sort()
     values = [user_dict[key] for key in keys]
-    user_table.reset()
-    user_table.add_rows([keys[1:14], values[1:14]], False)
-    user_table.add_row(([" "] * 13))
-    user_table.add_rows([keys[14:27], values[14:27]], False)
+    # user_table.reset()
+    # user_table.add_rows([keys[1:14], values[1:14]], False)
+    # user_table.add_row(([" "] * 13))
+    # user_table.add_rows([keys[14:27], values[14:27]], False)
     # print(user_table.draw())
     # print()
-    return user_table
+    # return user_table
 
 def encrypt_message(origin_message, cipher_key):
     encrypted_message = ''
