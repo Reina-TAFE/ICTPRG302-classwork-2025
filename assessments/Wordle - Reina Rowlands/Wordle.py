@@ -79,7 +79,7 @@ def score_guess(guess_list, target_list):
 
 
 def format_score(score):  # Tests score for each position and returns corresponding square
-    '''takes the score and formats it into coloured squares'''
+    """takes the score and formats it into coloured squares"""
     formatted_score = [0, 0, 0, 0, 0]
     count = 0
     for num in score:
@@ -97,8 +97,8 @@ def format_score(score):  # Tests score for each position and returns correspond
 
 
 def show_score(guess, score):
-    '''takes the guess and unformatted score. the score is passed to format_score() and the formatted score is returned.
-    the guess and score are then printed'''
+    """takes the guess and unformatted score. the score is passed to format_score() and the formatted score is returned.
+    the guess and score are then printed"""
     count = 0
     score = format_score(score)  # returns score as white/yellow/green squares
     output_guess = "" # defines output_guess/score variables
@@ -113,8 +113,8 @@ def show_score(guess, score):
 
 
 def get_guess():  # get guess for user and test if it is valid
-    '''takes a guess from the user and checks if it is in the list of valid words.
-    if the guess is valid, it is passed back to play() as a string'''
+    """takes a guess from the user and checks if it is in the list of valid words.
+    if the guess is valid, it is passed back to play() as a string"""
     while True:
         guess_word = input('Make a guess: ')
         if guess_word in VALID_WORDS:
@@ -123,7 +123,7 @@ def get_guess():  # get guess for user and test if it is valid
             print('Invalid guess')
 
 def record_stats(username, tries):
-    '''records usernames and scores in a seperate file, user_stats.txt'''
+    """records usernames and scores in a separate file, user_stats.txt"""
     try:
         with open('./word-bank/user_stats.txt', "x") as stats:
             lines = f"{username}, {tries}"
@@ -154,7 +154,7 @@ def record_stats(username, tries):
     return None
     
 def get_average(username):
-    '''calculates the average number of guesses it takes for a user to win'''
+    """calculates the average number of guesses it takes for a user to win"""
     with open("./word-bank/user_stats.txt", "r") as stats:
         lines = stats.readlines()
         for line in lines:
@@ -171,13 +171,13 @@ def get_average(username):
     return average
 
 def play():
-    '''defines the order in which to execute the functions'''
+    """defines the order in which to execute the functions"""
     print(show_instructions.__doc__)
     name = input("Hi! Welcome to Wordle, what is your name?\n")
-    attempt = 1
+    current_attempt = 1
     target_word = random.choice(TARGET_WORDS).lower()  # selects a word from the target_words file
 
-    while 0 < attempt <= 6:  # loops until player runs out of attempts
+    while 0 < current_attempt <= MAX_Attempts:  # loops until player runs out of attempts
         guess = get_guess()  # Asks the player for a guess, returns guess as a string
         score = score_guess(list(guess), list(target_word))  # passes both guess and target as lists of letters to score_guess(). returns score list
         print("My guess", guess.upper())
@@ -185,13 +185,13 @@ def play():
         if score == [2, 2, 2, 2, 2]:  # tests if guess is correct
             print("You Win!")            
             if name != '':
-                record_stats(name, attempt)
+                record_stats(name, current_attempt)
                 print("Your average number of guesses is: " + str(get_average(name)))
             exit()  # exits program
         else:
-            attempt += 1  # if guess is incorrect, increments attempt by 1 and continues loop
+            current_attempt += 1  # if guess is incorrect, increments current_attempt by 1 and continues loop
             print("Try Again :( ")
-            print("\nYou have", (6 - attempt), "attempts remaining\n") # decreases attempt by 1
+            print("\nYou have", (MAX_Attempts - current_attempt), "attempts remaining\n") # decreases current_attempt by 1
     print("The word was: " + target_word)
     print("You Lose :(")
     exit()
