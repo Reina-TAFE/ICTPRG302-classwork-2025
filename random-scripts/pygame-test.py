@@ -13,7 +13,7 @@ SCREEN_HEIGHT = 400
 FONT = pygame.font.SysFont('Arial', size=24)
 
 alphabet = substitution.get_encrypted_alphabet()
-message = substitution.get_random_message()
+message, url = substitution.get_random_message()
 clock = pygame.time.Clock()
 
 SCREEN = pygame.display.set_mode((SCREEN_WIDTH, SCREEN_HEIGHT))
@@ -59,14 +59,14 @@ class RefTable(object):
         self.draw_table()
 
 class InputBox:
-    COLOUR_INACTIVE = pygame.Color('azure2')
-    COLOUR_ACTIVE = pygame.Color('azure3')
+    COLOUR_INACTIVE = (0, 128, 255)
+    COLOUR_ACTIVE = (0, 74, 148)
 
-    def __init__(self, target, x, y, w, h, text=''):
+    def __init__(self, target, x, y, w, h, text='a'):
         self.rect = pygame.Rect(x, y, w, h)
         self.text = text
         self.colour = InputBox.COLOUR_INACTIVE
-        self.txt_surface = FONT.render(self.text, True, self.colour)
+        self.txt_surface = FONT.render(self.text, True, (0,0,0))
         self.active = False
         self.target = target
 
@@ -100,29 +100,45 @@ class InputBox:
             print("Invalid Substitution")
 
     def draw(self, screen):
-        screen.blit(self.txt_surface, (self.rect.x + 5, self.rect.y + 5))
-        input_rect = self.txt_surface.get_rect(center=(SCREEN_WIDTH // 2, 2 * SCREEN_HEIGHT // 3))
-        pygame.draw.rect(screen, self.colour, input_rect, 2)
+        SCREEN.blit(self.txt_surface, (self.rect.x + (self.rect.w /3), self.rect.y + (self.rect.h / 3)))
+        input_rect = self.txt_surface.get_rect(center=(SCREEN_WIDTH / 2, 2 * SCREEN_HEIGHT / 3))
+        pygame.draw.rect(SCREEN, self.colour, self.rect, 0)
 
 class CipherText(object):
     def __init__(self, text, keys, ref):
+        self.surface = pygame.Surface([650, 200])
+        self.surface.fill((235,235,235))
         self.origin = text
-        self.keys = keys
-        self.cipher_text = self.encrypt()
         self.ref = ref
+        self.keys = keys
+        user_keys = list(keys.values())
+        user_starting_values = user_keys
+        self.user_dict = dict(zip(user_keys, user_starting_values))
+        self.cipher_text = self.encrypt(init=True)
 
     # Encrypt text
-    def encrypt(self):
+    def encrypt(self, init=False):
         cipher_message = ''
-        for letter in self.origin:
+        if init:
+            for letter in self.origin:
 
-            if letter.isalpha():
-                if letter.isupper():
-                    cipher_message = cipher_message + self.keys[letter.lower()].upper()
+                if letter.isalpha():
+                    if letter.isupper():
+                        cipher_message = cipher_message + self.keys[letter.lower()].upper()
+                    else:
+                        cipher_message = cipher_message + self.keys[letter]
                 else:
-                    cipher_message = cipher_message + self.keys[letter]
-            else:
-                cipher_message = cipher_message + letter
+                    cipher_message = cipher_message + letter
+        else:
+            for letter in self.cipher_text:
+
+                if letter.isalpha():
+                    if letter.isupper():
+                        cipher_message = cipher_message + self.user_dict[letter.lower()].upper()
+                    else:
+                        cipher_message = cipher_message + self.user_dict[letter]
+                else:
+                    cipher_message = cipher_message + letter
         return cipher_message
 
     # Update keys with new keys
@@ -136,18 +152,20 @@ class CipherText(object):
     #     draw_message = FONT.render(self.cipher_text, True, (0,0,0))
     #     text_rect = draw_message.get_rect(center=(SCREEN_WIDTH / 2, 120))
     #     SCREEN.blit(draw_message, text_rect)
-    def draw_text(self, surface,  rect, aa=False, bkg=None):
-        rect = pygame.Rect(rect)
+
+    def draw_text(self, aa=False, bkg=None):
+        SCREEN.blit(self.surface, (100, 120))
+        rect = self.surface.get_rect(center=(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2))
         text = self.cipher_text
         y = rect.top
         line_spacing = -2
+        # self.surface.fill((255, 255, 255), rect=rect)
 
         # get the height of the font
         font_height = FONT.size("Tg")[1]
 
         while text:
             i = 1
-
             # determine if the row of text will be outside our area
             if y + font_height > rect.bottom:
                 break
@@ -155,6 +173,14 @@ class CipherText(object):
             # determine maximum width of line
             while FONT.size(text[:i])[0] < rect.width and i < len(text):
                 i += 1
+
+            # n = text.rfind("\n", 0, i) + 1
+            # if FONT.size(text[:n])[0] < rect.width and FONT.size(text[:n])[0] < FONT.size(text[:i])[0]:
+            #     image = FONT.render(text[:n], aa, (0, 0, 0))
+            #     SCREEN.blit(image, (rect.left, y))
+            #     y += font_height + line_spacing
+            #     text = text[n:]
+            #     continue
 
             # if we've wrapped the text, then adjust the wrap to the last word
             if i < len(text):
@@ -167,20 +193,20 @@ class CipherText(object):
             else:
                 image = FONT.render(text[:i], aa, (0,0,0))
 
-            surface.blit(image, (rect.left, y))
+            SCREEN.blit(image, (rect.left, y))
             y += font_height + line_spacing
 
             # remove the text we just blitted
             text = text[i:]
 
-        return text
 
 def play_pygame():
     ref_table = RefTable(50, 20, 780, 80, alphabet)
     ref_table.draw_table()
     cipher = CipherText(message, alphabet, ref_table)
-    cipher.draw_cipher_text()
-    input_box = InputBox(cipher, 0, 0, 60, 120)
+    cipher.draw_text()
+    input_box = InputBox(cipher, 50, 100, 60, 80)
+    input_box.draw(SCREEN)
 
     # pygame.display.flip()
     run = True
