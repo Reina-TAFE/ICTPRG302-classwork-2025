@@ -32,7 +32,8 @@ def show_instructions():
 
 def score_guess(guess_list, target_list):
     """takes the user guess and target word as a list of letters for each word
-    and compares each letter of the guess to the target to see if the target contain the letter and if the letter is in the same position.
+    and compares each letter of the guess to the target to see if the target contain the letter
+    and if the letter is in the same position.
     Returns the score as a list with each position corresponding to the letter of the guess
 
 
