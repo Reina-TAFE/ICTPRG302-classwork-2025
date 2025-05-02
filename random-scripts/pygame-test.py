@@ -159,7 +159,7 @@ class CipherText(object):
     #     self.ref.update(self.keys)
 
     def draw_text(self, aa=False, bkg=None):
-        SCREEN.blit(self.surface, (125, 100))
+        SCREEN.blit(self.surface, ((SCREEN_WIDTH / 2)-(self.surface.get_width()/2), 100))
         rect = self.surface.get_rect(center=((SCREEN_WIDTH / 2), SCREEN_HEIGHT / 2))
         text = self.cipher_text
         y = rect.top
@@ -215,12 +215,14 @@ def play_pygame():
     run = True
     while run:
         SCREEN.fill((255, 255, 255))
+        # input_visualiser.surface.fill((153, 162, 168))
         ref_table.draw_table()
         cipher.draw_text()
         events = pygame.event.get()
 
         input_visualiser.update(events)
-        SCREEN.blit(input_visualiser.surface, (350, 325))
+        input_width = FONT.size(input_visualiser.value)[0]
+        SCREEN.blit(input_visualiser.surface, ((SCREEN_WIDTH // 2) - (input_width / 2), 325))
 
         for event in events:
             if event.type == QUIT:
