@@ -1,10 +1,13 @@
 import random
 import re
+
 # from texttable import Texttable
 
 MESSAGE_BANK = open('sentences.txt')
 MESSAGE_LIST = (MESSAGE_BANK.read()).split("*****")
 MESSAGE_BANK.close()
+
+
 # MESSAGE = "the quick brown fox jumps over the lazy dog"
 # user_table = Texttable()
 
@@ -14,10 +17,12 @@ def get_random_message():
     message_split[0] = message_split[0].strip()
     return message_split
 
+
 def shuffle_letters(unshuffled):
     shuffled = unshuffled
     random.shuffle(shuffled)
     return shuffled
+
 
 def get_encrypted_alphabet():
     alphabet = []
@@ -33,11 +38,13 @@ def get_encrypted_alphabet():
     print(substitution_cipher)
     return substitution_cipher
 
+
 def init_user_alphabet(origin_dict):
     user_keys = list(origin_dict.values())
     user_starting_values = user_keys
     user_starting_dict = dict(zip(user_keys, user_starting_values))
     return user_starting_dict
+
 
 def print_table(user_dict):
     keys = [letter for letter in list(user_dict.keys())]
@@ -50,6 +57,7 @@ def print_table(user_dict):
     # print(user_table.draw())
     # print()
     # return user_table
+
 
 def encrypt_message(origin_message, cipher_key):
     encrypted_message = ''
@@ -64,6 +72,7 @@ def encrypt_message(origin_message, cipher_key):
     print(encrypted_message)
     return encrypted_message
 
+
 def get_guess(current_keys):
     user_guess = input("pick a letter to substitute: ").lower()
     if re.match(r'[a-zA-Z]=[a-zA-Z]', user_guess):
@@ -73,11 +82,13 @@ def get_guess(current_keys):
         print("Invalid Substitution")
     return current_keys
 
+
 def check_guess(original, guess_message):
     if guess_message == original:
         print("You Win!")
         return True
     return False
+
 
 def play_substitution():
     substitution_keys = get_encrypted_alphabet()
