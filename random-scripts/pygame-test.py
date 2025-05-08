@@ -1,6 +1,6 @@
 import re
-
 import pygame
+from pygame.locals import *
 import pygame.freetype
 import pygame_textinput as pgi
 from pygame.locals import *
@@ -8,6 +8,7 @@ from pygame.locals import *
 import substitution
 
 pygame.init()
+
 
 SCREEN_WIDTH = 950
 SCREEN_HEIGHT = 400
@@ -38,6 +39,8 @@ class RefTable(object):
         row_1 = list(self.user_dict.keys())
         row_2 = list(self.user_dict.values())
 
+        row_1.sort()
+
         # Draw Lines For Table
         for row in range(3):
             pygame.draw.line(SCREEN, (0, 0, 0), (120, row * self.cell_height),
@@ -51,15 +54,19 @@ class RefTable(object):
         header_row_2 = FONT.render("Decrypted", True, (0, 0, 0))
 
         # Blit Row Headers to SCREEN
-        SCREEN.blit(header_row_1, (10, self.cell_width // 4))
-        SCREEN.blit(header_row_2, (10, self.cell_width * 6 // 4))
+        SCREEN.blit(header_row_1, (10, (self.cell_height /2) - (FONT.size("Encrypted")[1] // 2)))
+        SCREEN.blit(header_row_2, (10, (self.cell_height * 3/2) - (FONT.size("Decrypted")[1] //2) ))
 
         # Draw Letters to table and blit
         for i in range(26):
-            letter1 = FONT.render(row_1[i], True, (0, 0, 0))
-            letter2 = FONT.render(row_2[i], True, (0, 0, 0))
-            SCREEN.blit(letter1, ((i + 1) * self.cell_width + 100, self.cell_height // 5))
-            SCREEN.blit(letter2, ((i + 1) * self.cell_width + 100, self.cell_height * 6 // 5))
+            letter1 = FONT.render(row_1[i], True, (0,0,0))
+            letter2 = FONT.render(row_2[i], True, (0,0,0))
+            spacing_x_1 = (self.cell_width /2) - (FONT.size(row_1[i])[0] //2)
+            spacing_x_2 = (self.cell_width /2) - (FONT.size(row_2[i])[0] //2)
+            spacing_y_1 = (self.cell_height /2) - (FONT.size(row_1[i])[1] //2)
+            spacing_y_2 = (self.cell_height /2) - (FONT.size(row_2[i])[1] //2)
+            SCREEN.blit(letter1, ( (i * self.cell_width) + spacing_x_1 + 120, spacing_y_1))
+            SCREEN.blit(letter2, ((i * self.cell_width) + spacing_x_2 + 120, self.cell_height + spacing_y_2))
 
     def init_user_dict(self):
         user_keys = list(self.origin_dict.values())
@@ -232,6 +239,7 @@ def play_pygame():
                 cipher.encrypt(ref_table.user_dict)
                 cipher.draw_text()
         pygame.display.update()
+        clock.tick(60)
     pygame.quit()
 
 

@@ -34,7 +34,7 @@ def get_encrypted_alphabet():
     print(alphabet)
     print(encrypted_alphabet)
     substitution_cipher = dict(zip(alphabet, encrypted_alphabet))
-    substitution_cipher[" "] = " "
+    # substitution_cipher[" "] = " "
     print(substitution_cipher)
     return substitution_cipher
 
