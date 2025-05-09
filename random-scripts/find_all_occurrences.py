@@ -32,16 +32,17 @@ def find_all_occurrences(word):
 
 
 def score_guess2(guess, target):
-    """Returns a dictionary of letters in target_word, with each unique letter as the keys
-    and a list of the position(s) of each occurrence as the values
+    """Compares letters in guess and target, and returns the score as a
+    list of integers
 
      Parameters
     ----------
     guess : string
+    target : string
 
     Returns
     -------
-    result : dictionary of letter : [occurrences] pairs
+    score : list of integers
 
     Examples
     --------
