@@ -1,3 +1,51 @@
+import time
+
+
+def score_guess1(guess, target):
+    """
+    Compares each letter of guess and target to see if they are the same.
+    If guess letter and target letter do not match, checks if target
+    word contains guess letter.
+
+    Parameters
+    ----------
+    guess : string
+    target : string
+
+    Returns
+    -------
+    result : a list of integer numbers of length len(target)
+
+    Examples
+    --------
+    >>> score_guess("world", "world")
+    ['2', '2', '2', '2', '2']
+
+    >>> score_guess("world", "hello")
+    ['0', '1', '0', '2', '0']
+
+    score_guess("hilly","world")
+    ['0', '0', '0', '2', '0']
+    """
+
+    # Set score to list of 0's of length len(target)
+    score = ['0'] * len(target)
+
+    # Repeat for each letter position 'index' of guess
+    for index in range(len(guess)):
+        guess_letter = guess[index]  # Set guess_letter to letter in current index of guess
+
+        # If guess_letter matches target letter at current position,
+        # set current position of score to 2
+        if guess_letter == target[index]:
+            score[index] = '2'
+        else:
+            for target_letter in target:
+                if guess_letter == target_letter:
+                    score[index] = '1'
+    return score
+
+
 def find_all_occurrences(word):
     """Returns a dictionary of letters in target_word, with each unique letter as the keys
     and a list of the position(s) of each occurrence as the values
@@ -118,6 +166,10 @@ def main(test=True):
     #     import doctest
     #     return doctest.testmod()
     find_all_occurrences("hello")
+
+    result = score_guess2("bobby", "blobs")
+
+    print(f"{result}")
 
 
 if __name__ == '__main__':
