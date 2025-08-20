@@ -26,7 +26,7 @@ def calculate_binary(base10):
     output = ""
     binary_total = 0
     total_positions = len(empty_binary)
-    for position in range(0, total_positions):
+    for position in range(total_positions):
         if binary_total + (2 ** (total_positions - 1 - position)) > base10:
             empty_binary[position] = 0
 
@@ -34,10 +34,28 @@ def calculate_binary(base10):
             empty_binary[position] = 1
             binary_total += (2 ** (total_positions - 1 - position))
         output += str(empty_binary[position])
-    return output
+    if output == bin(base10):
+        return output
+    else:
+        print("Error: Incorrect output, returning in-built bin()")
+        return bin(base10)
 
 
-base_10 = int(input("enter an integer: "))
-binary = calculate_binary(base_10)
-print(binary)
-print(bin(base_10))
+def main():
+    base10 = input("Enter a base 10: ")
+    try:
+        base10 = int(base10)
+        output = calculate_binary(base10)
+    except ValueError:
+        base10_ords = [f"{ord(c)}" for c in base10]
+        output = "/x".join([calculate_binary(n) for n in base10_ords])
+    print(output)
+
+
+if __name__ == "__main__":
+    main()
+
+# base_10 = int(input("enter an integer: "))
+# binary = calculate_binary(base_10)
+# print(binary)
+# print(bin(base_10))
